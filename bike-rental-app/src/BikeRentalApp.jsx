@@ -138,7 +138,7 @@ export default function BikeRentalApp() {
     () => classes.find((item) => item.id === selectedClassId) || null,
     [classes, selectedClassId]
   );
-  const jitsiUrl = selectedClass
+  const videoRoomUrl = selectedClass
     ? (selectedClass.jitsiRoomUrl || `https://meet.jit.si/classroom-${selectedClass.id}`)
     : '';
 
@@ -692,13 +692,13 @@ export default function BikeRentalApp() {
               {selectedClass ? (
                 <>
                   <div className="stack" style={{ marginBottom: 10 }}>
-                    <a href={jitsiUrl} target="_blank" rel="noreferrer" className="secondary-btn">
+                    <a href={videoRoomUrl} target="_blank" rel="noreferrer" className="secondary-btn">
                       Open room in new tab
                     </a>
                   </div>
                   <iframe
                     title="jitsi"
-                    src={jitsiUrl}
+                    src={videoRoomUrl}
                     allow="camera; microphone; fullscreen; display-capture"
                   />
                 </>
@@ -715,7 +715,7 @@ export default function BikeRentalApp() {
                   <h2>Live class</h2>
                   <iframe
                     title="class-video"
-                    src={jitsiUrl}
+                    src={videoRoomUrl}
                     allow="camera; microphone; fullscreen; display-capture"
                   />
                 </div>
