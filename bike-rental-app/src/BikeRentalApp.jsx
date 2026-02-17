@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:4011';
 const HUB_URL = `${API_BASE}/hubs/class`;
 const STORAGE_KEY = 'classin_mvp_auth';
+const ROLE_CLAIM_URI = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
 
 const defaultHeaders = (token) => ({
   'Content-Type': 'application/json',
@@ -46,7 +47,10 @@ function tryLoadAuth() {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed?.token) return null;
-    return parsed;
+    return {
+      ...parsed,
+      role: normalizeRole(parsed.role ?? extractRoleFromToken(parsed.token))
+    };
   } catch {
     return null;
   }
@@ -77,6 +81,27 @@ function normalizeRole(role) {
 
   const numeric = Number(role);
   return numeric === 1 ? 1 : 2;
+}
+
+function decodeJwtPayload(token) {
+  if (!token || typeof token !== 'string') return null;
+  const parts = token.split('.');
+  if (parts.length < 2) return null;
+
+  try {
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+    const json = atob(padded);
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
+function extractRoleFromToken(token) {
+  const payload = decodeJwtPayload(token);
+  if (!payload || typeof payload !== 'object') return null;
+  return payload.role ?? payload[ROLE_CLAIM_URI] ?? null;
 }
 
 export default function BikeRentalApp() {
@@ -300,12 +325,13 @@ export default function BikeRentalApp() {
           };
 
       const data = await apiRequest(endpoint, { method: 'POST', body: JSON.stringify(payload) });
-      const resolvedRole = normalizeRole(data.role ?? data.Role);
+      const resolvedToken = data.token ?? data.Token;
+      const resolvedRole = normalizeRole(data.role ?? data.Role ?? extractRoleFromToken(resolvedToken));
       const nextAuth = {
-        token: data.token,
-        userId: data.userId,
-        name: data.name,
-        email: data.email,
+        token: resolvedToken,
+        userId: data.userId ?? data.UserId,
+        name: data.name ?? data.Name,
+        email: data.email ?? data.Email,
         role: resolvedRole
       };
 
