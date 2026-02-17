@@ -5,11 +5,11 @@ services:
     container_name: classin-backend
     image: classin-backend
     build:
-      context: ./Anjir
+      context: ./Class
       dockerfile: Dockerfile
     ports:
       - "4011:4011"
     env_file:
-      - ./Anjir/.env
+      - ./Class/.env
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:4011
