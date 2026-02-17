@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: classin-backend
+    image: classin-backend
+    build:
+      context: ./Anjir
+      dockerfile: Dockerfile
+    ports:
+      - "4011:4011"
+    env_file:
+      - ./Anjir/.env
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:4011

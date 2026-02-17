@@ -1,0 +1,12 @@
+.vs/
+.idea/
+**/.vs/
+**/.idea/
+*.user
+*.suo
+**/bin/
+**/obj/
+**/node_modules/
+**/build/
+**/temp_build_output/
+**/temp_build_output_dapper/
