@@ -2,7 +2,7 @@ namespace ClassIn.Domain.Enums;
 
 public enum UserRole
 {
-    Student = 1,
-    Teacher = 2
+    Teacher = 1,
+    Student = 2
 }
 

@@ -34,7 +34,7 @@ public sealed class AuthService(ISqlConnectionFactory connectionFactory, IConfig
 
         if (!Enum.IsDefined(typeof(UserRole), request.Role))
         {
-            throw new InvalidOperationException("Role must be 1 (Student) or 2 (Teacher).");
+            throw new InvalidOperationException("Role must be 1 (Teacher) or 2 (Student).");
         }
 
         var role = (UserRole)request.Role;
