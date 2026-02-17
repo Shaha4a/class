@@ -69,18 +69,18 @@ function uniqueAdd(list, value) {
 }
 
 function roleLabel(role) {
-  return normalizeRole(role) === 1 ? 'Teacher' : 'Student';
+  return normalizeRole(role) === 2 ? 'Teacher' : 'Student';
 }
 
 function normalizeRole(role) {
   if (typeof role === 'string') {
     const value = role.trim().toLowerCase();
-    if (value === 'teacher') return 1;
-    if (value === 'student') return 2;
+    if (value === 'teacher') return 2;
+    if (value === 'student') return 1;
   }
 
   const numeric = Number(role);
-  return numeric === 1 ? 1 : 2;
+  return numeric === 2 ? 2 : 1;
 }
 
 function decodeJwtPayload(token) {
@@ -107,7 +107,7 @@ function extractRoleFromToken(token) {
 export default function BikeRentalApp() {
   const [auth, setAuth] = useState(() => tryLoadAuth());
   const [isRegister, setIsRegister] = useState(false);
-  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', role: 2 });
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', role: 1 });
   const [authError, setAuthError] = useState('');
 
   const [classes, setClasses] = useState([]);
@@ -335,7 +335,7 @@ export default function BikeRentalApp() {
 
       saveAuth(nextAuth);
       setAuth(nextAuth);
-      setAuthForm({ name: '', email: '', password: '', role: 2 });
+      setAuthForm({ name: '', email: '', password: '', role: 1 });
     } catch (err) {
       setAuthError(err.message);
     }
@@ -543,8 +543,8 @@ export default function BikeRentalApp() {
                   value={authForm.role}
                   onChange={(e) => setAuthForm((prev) => ({ ...prev, role: Number(e.target.value) }))}
                 >
-                  <option value={2}>Student</option>
-                  <option value={1}>Teacher</option>
+                  <option value={1}>Student</option>
+                  <option value={2}>Teacher</option>
                 </select>
               </label>
             )}
