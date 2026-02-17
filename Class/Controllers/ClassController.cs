@@ -14,9 +14,20 @@ public sealed class ClassController(IClassService classService) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ClassDto>> Create([FromBody] CreateClassRequestDto request, CancellationToken cancellationToken)
     {
-        var userId = User.GetUserId();
-        var classRoom = await classService.CreateClassAsync(userId, request, cancellationToken);
-        return Ok(classRoom);
+        try
+        {
+            var userId = User.GetUserId();
+            var classRoom = await classService.CreateClassAsync(userId, request, cancellationToken);
+            return Ok(classRoom);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost("join")]
