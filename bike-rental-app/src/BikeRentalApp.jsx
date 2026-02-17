@@ -65,7 +65,18 @@ function uniqueAdd(list, value) {
 }
 
 function roleLabel(role) {
-  return Number(role) === 1 ? 'Teacher' : 'Student';
+  return normalizeRole(role) === 1 ? 'Teacher' : 'Student';
+}
+
+function normalizeRole(role) {
+  if (typeof role === 'string') {
+    const value = role.trim().toLowerCase();
+    if (value === 'teacher') return 1;
+    if (value === 'student') return 2;
+  }
+
+  const numeric = Number(role);
+  return numeric === 1 ? 1 : 2;
 }
 
 export default function BikeRentalApp() {
@@ -98,7 +109,7 @@ export default function BikeRentalApp() {
   const redoRef = useRef([]);
 
   const token = auth?.token || '';
-  const isTeacher = Number(auth?.role) === 1;
+  const isTeacher = normalizeRole(auth?.role) === 1;
 
   const selectedClass = useMemo(
     () => classes.find((item) => item.id === selectedClassId) || null,
@@ -289,12 +300,13 @@ export default function BikeRentalApp() {
           };
 
       const data = await apiRequest(endpoint, { method: 'POST', body: JSON.stringify(payload) });
+      const resolvedRole = normalizeRole(data.role ?? data.Role);
       const nextAuth = {
         token: data.token,
         userId: data.userId,
         name: data.name,
         email: data.email,
-        role: Number(data.role)
+        role: resolvedRole
       };
 
       saveAuth(nextAuth);
