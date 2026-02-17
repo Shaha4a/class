@@ -134,8 +134,6 @@ export default function BikeRentalApp() {
   const redoRef = useRef([]);
 
   const token = auth?.token || '';
-  const isTeacher = normalizeRole(auth?.role) === 1;
-
   const selectedClass = useMemo(
     () => classes.find((item) => item.id === selectedClassId) || null,
     [classes, selectedClassId]
@@ -590,18 +588,16 @@ export default function BikeRentalApp() {
             <strong>{statusText}</strong>
           </div>
 
-          {isTeacher && (
-            <div className="stack">
-              <input
-                placeholder="New class name"
-                value={createClassName}
-                onChange={(e) => setCreateClassName(e.target.value)}
-              />
-              <button className="primary-btn" onClick={handleCreateClass}>
-                Create class
-              </button>
-            </div>
-          )}
+          <div className="stack">
+            <input
+              placeholder="New class name"
+              value={createClassName}
+              onChange={(e) => setCreateClassName(e.target.value)}
+            />
+            <button className="primary-btn" onClick={handleCreateClass}>
+              Create class
+            </button>
+          </div>
 
           <div className="stack">
             <input

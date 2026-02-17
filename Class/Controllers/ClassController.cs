@@ -12,7 +12,6 @@ namespace ClassIn.Controllers;
 public sealed class ClassController(IClassService classService) : ControllerBase
 {
     [HttpPost]
-    [Authorize(Roles = "Teacher")]
     public async Task<ActionResult<ClassDto>> Create([FromBody] CreateClassRequestDto request, CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
